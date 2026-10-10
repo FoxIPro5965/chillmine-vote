@@ -30,6 +30,16 @@
     $("voteBtn").disabled = true; $("voteBtn").textContent = "LIÊN KẾT ĐỂ VOTE";
     $("timer").textContent = "";
   }
+  async function refreshStats() {
+    try {
+      const stats = await api("/api/stats");
+      $("voterCount").textContent = Number(stats.uniqueVoters || 0).toLocaleString("vi-VN");
+      $("voteCount").textContent = Number(stats.totalVotes || 0).toLocaleString("vi-VN");
+    } catch (_) {
+      $("voterCount").textContent = "—";
+      $("voteCount").textContent = "—";
+    }
+  }
   async function refresh() {
     if (!token) { showUnlinked(); return; }
     try {
@@ -77,9 +87,11 @@
     $("voteBtn").disabled = true;
     try {
       const result = await api("/api/vote", { method: "POST", body: "{}" });
-      say(result.message, "good"); await refresh();
+      say(result.message, "good"); await refresh(); await refreshStats();
     } catch (e) { say(e.message, "bad"); await refresh(); }
   });
   $("unlink").addEventListener("click", () => { showUnlinked(); say("Đã đăng xuất khỏi website."); });
   refresh();
+  refreshStats();
+  setInterval(refreshStats, 60000);
 })();
