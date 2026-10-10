@@ -71,7 +71,7 @@
   }
   $("linkBtn").addEventListener("click", async () => {
     const username = $("mcname").value.trim(), code = $("code").value.trim().toUpperCase();
-    if (!/^[A-Za-z0-9_]{3,16}$/.test(username) || !/^[A-Z0-9]{6}$/.test(code)) {
+    if (!/^(?:\.)?[A-Za-z0-9_]{3,16}$/.test(username) || !/^[A-Z0-9]{6}$/.test(code)) {
       say("Hãy nhập tên Minecraft hợp lệ và mã 6 ký tự.", "bad"); return;
     }
     $("linkBtn").disabled = true;
